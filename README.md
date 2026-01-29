@@ -1,17 +1,12 @@
 # Algorithmic Laboratory 🧪
 
 This repository is a centralized hub for my journey through the **NeetCode Roadmap** and LeetCode challenges. Every solution is implemented with a focus on efficiency and clean code standards.
-
-## 🛠️ Tech Stack & Standards
-- **Language**: Python 3.12
-- **Standards**: Strictly following **PEP 8**, **PEP 257**, and **PEP 484**.
-- **Methodology**: Analyzing time and space complexity ($O(n)$ focus).
+- **Languages**: Python 3.12, JavaScript
 
 ## 🏆 HackerRank Certifications
 ---
 
 # LeetCode Journey
-(Keep your LeetHub tables here)
 ## Array
 |  |
 | ------- |
