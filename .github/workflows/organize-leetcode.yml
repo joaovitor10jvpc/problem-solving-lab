@@ -1,0 +1,39 @@
+name: Organize LeetCode Submissions
+
+on:
+  push:
+    branches:
+      - main 
+    paths-ignore:
+      - 'leetcode/**'
+      - 'hackerrank/**'
+      - '.github/**'
+      - 'README.md'
+
+jobs:
+  move-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Move LeetCode Folders
+        run: |
+          # Procura por pastas na raiz que começam com 4 dígitos (padrão do LeetHub)
+          for dir in [0-9][0-9][0-9][0-9]-*/ ; do
+            if [ -d "$dir" ]; then
+              echo "Moving $dir to leetcode/"
+              mkdir -p leetcode
+              mv "$dir" leetcode/
+            fi
+          done
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          # Só faz o commit se houver mudanças para evitar erros
+          git diff --staged --quiet || (git commit -m "Organize LeetCode submissions into subfolder" && git push)
