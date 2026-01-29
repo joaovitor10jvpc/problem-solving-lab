@@ -35,7 +35,8 @@ A collection of LeetCode questions to ace the coding interview! - Created using 
 |  |
 | ------- |
 | [0217-contains-duplicate](https://github.com/joaovitor10jvpc/leetcode_answers/tree/master/0217-contains-duplicate) |
-## Sorting
+
+## 🏆 HackerRank Certifications & Badges## Sorting
 |  |
 | ------- |
 | [0217-contains-duplicate](https://github.com/joaovitor10jvpc/leetcode_answers/tree/master/0217-contains-duplicate) |
