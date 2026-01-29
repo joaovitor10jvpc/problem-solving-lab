@@ -1,18 +1,17 @@
-# Data Science & AI Laboratory 🧪
+# Algorithmic Laboratory 🧪
 
-This repository is a centralized hub for my journey in Algorithm Design, Data Structures, and Software Development. I focus on writing clean, efficient, and well-documented code following **PEP 8**, **PEP 257**, and **PEP 484** standards.
+This repository is a centralized hub for my journey through the **NeetCode Roadmap** and LeetCode challenges. Every solution is implemented with a focus on efficiency and clean code standards.
 
-## 👤 About Me
-- 🎓 **Undergraduate Student**: Data Science & Artificial Intelligence at Federal University of Paraíba (UFPB).
-- 🛠️ **Tech Stack**: Python 3.12, JavaScript.
+## 🛠️ Tech Stack & Standards
+- **Language**: Python 3.12
+- **Standards**: Strictly following **PEP 8**, **PEP 257**, and **PEP 484**.
+- **Methodology**: Analyzing time and space complexity ($O(n)$ focus).
 
-## 🏆 HackerRank Certifications & Badges
+## 🏆 HackerRank Certifications
 ---
 
-# 🧠 LeetCode Journey
-(Mantenha suas tabelas automáticas aqui)
-<!---LeetCode Topics Start-->
-# LeetCode Topics
+# LeetCode Journey
+(Keep your LeetHub tables here)
 ## Array
 |  |
 | ------- |
