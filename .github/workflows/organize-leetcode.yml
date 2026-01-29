@@ -24,16 +24,16 @@ jobs:
           # 1. Iterate through folders starting with digits
           for dir in [0-9][0-9][0-9][0-9]-*/ ; do
             if [ -d "$dir" ]; then
-              echo "Processing $dir"
+              echo "Processing folder: $dir"
               mkdir -p leetcode
               
               FOLDER_NAME=$(basename "$dir")
               
-              # 2. Update Absolute URLs in README.md
-              # This looks for ".../tree/main/FOLDER_NAME" and replaces with ".../tree/main/leetcode/FOLDER_NAME"
+              # 2. Update the absolute GitHub URLs in README.md
+              # We target the specific pattern /tree/main/ followed by the folder name
               sed -i "s|/tree/main/$FOLDER_NAME|/tree/main/leetcode/$FOLDER_NAME|g" README.md
               
-              # 3. Move the folder
+              # 3. Move the physical folder to the subfolder
               mv "$dir" leetcode/
             fi
           done
