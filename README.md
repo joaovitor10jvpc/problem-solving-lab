@@ -1,6 +1,11 @@
-# leetcode_answers
-A collection of LeetCode questions to ace the coding interview! - Created using [LeetHub v2](https://github.com/arunbhardwaj/LeetHub-2.0)
+# Data Science & AI Laboratory
 
+This repository serves as a centralized hub for my algorithmic journey and software development skills. 
+I am currently an undergraduate student of Data Science and Artificial Intelligence at the Federal University of Paraíba (UFPB).
+
+## 🛠️ Tech Stack
+- **Language**: Python 3.12, JavaScript
+- **Focus**: Machine Learning, Data Structures, and Optimization
 <!---LeetCode Topics Start-->
 # LeetCode Topics
 ## Array
