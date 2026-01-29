@@ -3,12 +3,13 @@ name: Organize LeetCode Submissions
 on:
   push:
     branches:
-      - main 
+      - main
     paths-ignore:
       - 'leetcode/**'
       - 'hackerrank/**'
       - '.github/**'
       - 'README.md'
+  workflow_dispatch:
 
 jobs:
   move-files:
@@ -21,7 +22,7 @@ jobs:
 
       - name: Move LeetCode Folders
         run: |
-          # Procura por pastas na raiz que começam com 4 dígitos (padrão do LeetHub)
+          # Search for folders starting with 4 digits (LeetHub pattern)
           for dir in [0-9][0-9][0-9][0-9]-*/ ; do
             if [ -d "$dir" ]; then
               echo "Moving $dir to leetcode/"
@@ -35,5 +36,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          # Só faz o commit se houver mudanças para evitar erros
+          # Only commit if there are changes to avoid errors
           git diff --staged --quiet || (git commit -m "Organize LeetCode submissions into subfolder" && git push)
