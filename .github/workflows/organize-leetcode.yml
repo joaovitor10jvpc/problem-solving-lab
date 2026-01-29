@@ -3,12 +3,11 @@ name: Organize LeetCode Submissions
 on:
   push:
     branches:
-      - main
+      - master
     paths-ignore:
       - 'leetcode/**'
       - 'hackerrank/**'
       - '.github/**'
-      - 'README.md'
   workflow_dispatch:
 
 jobs:
@@ -20,13 +19,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Move LeetCode Folders
+      - name: Move Folders and Update README Links
         run: |
-          # Search for folders starting with 4 digits (LeetHub pattern)
+          # 1. Move folders starting with digits to leetcode/
           for dir in [0-9][0-9][0-9][0-9]-*/ ; do
             if [ -d "$dir" ]; then
               echo "Moving $dir to leetcode/"
               mkdir -p leetcode
+              
+              # Extract the folder name to update the link in README
+              FOLDER_NAME=$(basename "$dir")
+              
+              # 2. Update links in README.md from root to leetcode/folder
+              # This looks for the specific folder link and prefixes it with leetcode/
+              sed -i "s|($FOLDER_NAME)|(leetcode/$FOLDER_NAME)|g" README.md
+              
               mv "$dir" leetcode/
             fi
           done
@@ -36,5 +43,4 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          # Only commit if there are changes to avoid errors
-          git diff --staged --quiet || (git commit -m "Organize LeetCode submissions into subfolder" && git push)
+          git diff --staged --quiet || (git commit -m "Organize folders and update README links" && git push)
