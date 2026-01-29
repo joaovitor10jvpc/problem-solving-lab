@@ -21,19 +21,20 @@ jobs:
 
       - name: Move Folders and Update README Links
         run: |
-          # 1. Iterate through folders starting with digits
+          # 1. Iterate through folders starting with 4 digits (LeetHub pattern)
           for dir in [0-9][0-9][0-9][0-9]-*/ ; do
             if [ -d "$dir" ]; then
-              echo "Processing folder: $dir"
+              echo "Processing: $dir"
               mkdir -p leetcode
               
               FOLDER_NAME=$(basename "$dir")
               
-              # 2. Update the absolute GitHub URLs in README.md
-              # We target the specific pattern /tree/main/ followed by the folder name
+              # 2. Update Absolute URLs in README.md
+              # This targets the specific GitHub path structure shown in your links
+              # Changing ".../tree/main/FOLDER" to ".../tree/main/leetcode/FOLDER"
               sed -i "s|/tree/main/$FOLDER_NAME|/tree/main/leetcode/$FOLDER_NAME|g" README.md
               
-              # 3. Move the physical folder to the subfolder
+              # 3. Move the physical directory
               mv "$dir" leetcode/
             fi
           done
