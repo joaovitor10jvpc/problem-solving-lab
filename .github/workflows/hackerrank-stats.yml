@@ -17,6 +17,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install Dependencies
+        run: pip install requests
+
       - name: Fetch HackerRank Badges
         run: |
           python - <<EOF
@@ -27,7 +30,8 @@ jobs:
           URL = f"https://www.hackerrank.com/rest/v1/profiles/{USERNAME}/badges"
           
           try:
-              response = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0'})
+              # Adicionando um timeout para evitar que o script trave
+              response = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0'}, timeout=10)
               data = response.json()
               
               badges_md = ""
@@ -35,7 +39,7 @@ jobs:
                   for badge in data['models']:
                       name = badge['badge_name']
                       stars = badge['stars']
-                      # Professional Badge format
+                      # Professional Badge format using shields.io
                       badges_md += f"![{name}](https://img.shields.io/badge/{name.replace(' ', '_')}-{stars}_Stars-2EC866?style=flat-square&logo=hackerrank) "
               
               if not badges_md:
@@ -48,6 +52,7 @@ jobs:
           with open("README.md", "r") as f:
               content = f.read()
 
+          # Substitui o conteúdo entre as âncoras no README
           pattern = r".*?"
           replacement = f"\n{badges_md}\n"
           new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
@@ -61,4 +66,4 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
-          git diff --staged --quiet || (git commit -m "Update HackerRank stats with error handling" && git push)
+          git diff --staged --quiet || (git commit -m "Update HackerRank stats with dependencies fixed" && git push)
