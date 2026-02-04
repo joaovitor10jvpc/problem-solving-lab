@@ -2,8 +2,8 @@ name: Update HackerRank Stats
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Roda diariamente à meia-noite
-  workflow_dispatch: # Permite rodar manualmente para testar
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   update-readme:
@@ -12,17 +12,53 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Update README with HackerRank Badge
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch HackerRank Badges
         run: |
-          # Este comando usa o sed para inserir uma badge oficial do HackerRank
-          # ligada ao seu perfil diretamente entre as âncoras no README
-          BADGE="![HackerRank](https://img.shields.io/badge/-HackerRank-2EC866?style=for-the-badge&logo=HackerRank&logoColor=white) [View Profile](https://www.hackerrank.com/joaovitor_pcost1)"
+          python - <<EOF
+          import requests
+          import re
+
+          USERNAME = "joaovitor_pcost1"
+          URL = f"https://www.hackerrank.com/rest/v1/profiles/{USERNAME}/badges"
           
-          sed -i "//,//c\\n$BADGE\n" README.md
+          try:
+              response = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0'})
+              data = response.json()
+              
+              badges_md = ""
+              if data.get('models'):
+                  for badge in data['models']:
+                      name = badge['badge_name']
+                      stars = badge['stars']
+                      # Professional Badge format
+                      badges_md += f"![{name}](https://img.shields.io/badge/{name.replace(' ', '_')}-{stars}_Stars-2EC866?style=flat-square&logo=hackerrank) "
+              
+              if not badges_md:
+                  badges_md = "No badges earned yet. Keep grinding! 🚀"
+                  
+          except Exception as e:
+              print(f"Error fetching data: {e}")
+              badges_md = "⚠️ HackerRank stats temporarily unavailable."
+
+          with open("README.md", "r") as f:
+              content = f.read()
+
+          pattern = r".*?"
+          replacement = f"\n{badges_md}\n"
+          new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+
+          with open("README.md", "w") as f:
+              f.write(new_content)
+          EOF
 
       - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
-          git diff --staged --quiet || (git commit -m "Update HackerRank profile link" && git push)
+          git diff --staged --quiet || (git commit -m "Update HackerRank stats with error handling" && git push)
