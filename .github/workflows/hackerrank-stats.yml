@@ -20,17 +20,17 @@ jobs:
       - name: Install Dependencies
         run: pip install requests
 
-      - name: Fetch HackerRank Badges
+      - name: Fetch and Inject Badges
         run: |
           python - <<EOF
           import requests
           import re
+          import sys
 
           USERNAME = "joaovitor_pcost1"
           URL = f"https://www.hackerrank.com/rest/v1/profiles/{USERNAME}/badges"
           
           try:
-              # Adicionando um timeout para evitar que o script trave
               response = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0'}, timeout=10)
               data = response.json()
               
@@ -39,26 +39,35 @@ jobs:
                   for badge in data['models']:
                       name = badge['badge_name']
                       stars = badge['stars']
-                      # Professional Badge format using shields.io
-                      badges_md += f"![{name}](https://img.shields.io/badge/{name.replace(' ', '_')}-{stars}_Stars-2EC866?style=flat-square&logo=hackerrank) "
+                      if stars > 0:
+                          badges_md += f"![{name}](https://img.shields.io/badge/{name.replace(' ', '_')}-{stars}_Stars-2EC866?style=flat-square&logo=hackerrank) "
               
+              # Se não houver medalhas, encerramos sem mexer no README
               if not badges_md:
-                  badges_md = "No badges earned yet. Keep grinding! 🚀"
+                  print("No badges found. Skipping update.")
+                  sys.exit(0)
                   
           except Exception as e:
-              print(f"Error fetching data: {e}")
-              badges_md = "⚠️ HackerRank stats temporarily unavailable."
+              print(f"Error: {e}")
+              sys.exit(0)
 
           with open("README.md", "r") as f:
               content = f.read()
 
-          # Substitui o conteúdo entre as âncoras no README
-          pattern = r".*?"
-          replacement = f"\n{badges_md}\n"
-          new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
-
-          with open("README.md", "w") as f:
-              f.write(new_content)
+          start_tag = ""
+          end_tag = ""
+          
+          # Verifica se as tags existem para evitar sobrescrever o arquivo inteiro
+          if start_tag in content and end_tag in content:
+              pattern = rf"{start_tag}.*?{end_tag}"
+              replacement = f"{start_tag}\n{badges_md}\n{end_tag}"
+              new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+              
+              with open("README.md", "w") as f:
+                  f.write(new_content)
+              print("README updated successfully.")
+          else:
+              print("Anchors not found. Please add the HTML comments to your README.")
           EOF
 
       - name: Commit and Push changes
@@ -66,4 +75,4 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
-          git diff --staged --quiet || (git commit -m "Update HackerRank stats with dependencies fixed" && git push)
+          git diff --staged --quiet || (git commit -m "Update HackerRank badges" && git push)
